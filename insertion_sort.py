@@ -29,3 +29,12 @@ class TestInsertionSort(unittest.TestCase):
         expected = [1]
 
         self.assertSequenceEqual(output, expected)
+
+    def test_can_sort_ordered_list_of_length_two(self):
+
+        input_ = [1, 2]
+
+        output = sort(input_)
+        expected = [1, 2]
+
+        self.assertSequenceEqual(output, expected)
