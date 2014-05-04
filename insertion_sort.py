@@ -5,20 +5,20 @@ chapter 2
 import unittest
 
 
-def sort(sequence):
+def sort(a):
     """ Sorts sequence using insertion sort algorithm
     """
-    for j, el in enumerate(sequence):
+    for j, el in enumerate(a):
         if j == 0:
             continue
-        key = sequence[j]
+        key = a[j]
         # insert A[j] into sorted sequence A[1..j-1]
         i = j - 1
-        while i >= 0 and sequence[i] > key:
-            sequence[i + 1] = sequence[i]
+        while i >= 0 and a[i] > key:
+            a[i + 1] = a[i]
             i = i - 1
-        sequence[i + 1] = key
-    return sequence
+        a[i + 1] = key
+    return a
 
 
 class TestInsertionSort(unittest.TestCase):
