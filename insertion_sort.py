@@ -16,7 +16,16 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = []
 
-        got = sort(input_)
-        output= []
+        output = sort(input_)
+        expected = []
 
-        self.assertSequenceEqual(got, output)
+        self.assertSequenceEqual(output, expected)
+
+    def test_can_sort_list_of_length_one(self):
+
+        input_ = [1]
+
+        output = sort(input_)
+        expected = [1]
+
+        self.assertSequenceEqual(output, expected)
