@@ -1,12 +1,20 @@
 """
 Implementation of Insertion Sort as found in 'Introduction to Algorithms'
 chapter 2
+
 """
 import unittest
 
 
-def sort(a):
+def sort(a, debug=False):
     """ Sorts sequence using insertion sort algorithm
+
+    I: sequence of numbers <a1, ... , an>
+    O: permutation <a1', ... , an'> such that a1' <= .... <= an'
+
+    sorting is in palce think two subarrays:
+        A[1 .. j -1] is sorted
+        A[j + 1 .. n] is unsorted
     """
     for j, el in enumerate(a):
         if j == 0:
@@ -14,10 +22,17 @@ def sort(a):
         key = a[j]
         # insert A[j] into sorted sequence A[1..j-1]
         i = j - 1
+        # a[0:i] is the ordered subarray
+        # a[i:len(a)] is unordered subarray
         while i >= 0 and a[i] > key:
+            # this iterates down the ordered subarray
+            # 'pushing up' values to create space for
+            # right location for the key
             a[i + 1] = a[i]
             i = i - 1
         a[i + 1] = key
+        if debug:
+            print str(a)
     return a
 
 
