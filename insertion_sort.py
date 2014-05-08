@@ -2,6 +2,8 @@
 Implementation of Insertion Sort as found in 'Introduction to Algorithms'
 chapter 2
 
+to run tests execute:
+    python3 -m unittest insertion_sort
 """
 import unittest
 
@@ -15,6 +17,8 @@ def sort(a, debug=False):
     sorting is in palce think two subarrays:
         A[1 .. j -1] is sorted
         A[j + 1 .. n] is unsorted
+
+    if debug is true state of sequence after each run is printed
     """
     for j, el in enumerate(a):
         if j == 0:
@@ -32,7 +36,7 @@ def sort(a, debug=False):
             i = i - 1
         a[i + 1] = key
         if debug:
-            print str(a)
+            print(str(a))
     return a
 
 
