@@ -20,18 +20,23 @@ def sort(a, debug=False):
 
     if debug is true state of sequence after each run is printed
     """
+
+    # a[0:i] is the ordered subarray
+    # a[i:len(a)] is unordered subarray
+
+    # The while loop iterates down the ordered subarray
+    # 'pushing up' values to create space for
+    # right location for the key
+
+    # j is index of current element
+    # insert A[j] into sorted sequence A[1..j-1]
+
     for j, el in enumerate(a):
         if j == 0:
             continue
         key = a[j]
-        # insert A[j] into sorted sequence A[1..j-1]
         i = j - 1
-        # a[0:i] is the ordered subarray
-        # a[i:len(a)] is unordered subarray
         while i >= 0 and a[i] > key:
-            # this iterates down the ordered subarray
-            # 'pushing up' values to create space for
-            # right location for the key
             a[i + 1] = a[i]
             i = i - 1
         a[i + 1] = key
