@@ -52,7 +52,7 @@ import time
 import statistics
 
 default_timer = time.perf_counter  # process_time
-import pdb; pdb.set_trace()  # XXX BREAKPOINT
+
 
 def timeit(callable_, runs=10):
     def inner(*args, **kwargs):
@@ -66,7 +66,7 @@ def timeit(callable_, runs=10):
         avg = statistics.mean(times)
         best = min(times)
         worst = min(times)
-        return result, best, avg, worst
+        return best, avg, worst
     return inner
 
 
@@ -80,55 +80,68 @@ def contains(container, obj):
     return obj in container
 
 
+def print_stats_report(best, avg, worst):
+    tmpl = "best:  {}\nmean:  {}\nworst: {}\n"
+    msg = tmpl.format(best, avg, worst)
+    print(msg)
+
+
+def print_container_type(container):
+    if type(container) == type:
+        print(str(container).split("'")[1].capitalize())
+    else:
+        print(str(type(container)).split("'")[1].capitalize())
+
+
 size = int(1e6)
 
 print('Creation\n')
 containers = (list, set, tuple)
 for container in containers:
-    result, best, avg, worst = create(container, size)
-    container_name = str(container).split("'")[1].capitalize()
-    tmpl = "{}:\nbest:  {}\nmean:  {}\nworst: {}\n"
-    msg = tmpl.format(container_name, best, avg, worst)
-    print(msg)
-
-"""
-Outputs:
-
-Creation
-
-List:
-best:  0.029161999999999466
-mean:  0.042134799999998765
-worst: 0.029161999999999466
-
-Set:
-best:  0.08680100000000124
-mean:  0.09330260000000265
-worst: 0.08680100000000124
-
-Tuple:
-best:  0.03296100000000024
-mean:  0.0433002000000009
-worst: 0.03296100000000024sults
-
-Which compares with:
-
-In [61]: %timeit list(range(int(1e6)))
-10 loops, best of 3: 41.9 ms per loop
-
-In [62]: %timeit set(range(int(1e6)))
-10 loops, best of 3: 92.6 ms per loop
-
-In [63]: %timeit tuple(range(int(1e6)))
-10 loops, best of 3: 43.2 ms per loop
-"""
+    print_container_type(container)
+    print_stats_report(*create(container, size))
 
 print('Membership\n')
 containers = (list(range(size)), {x for x in range(size)}, tuple(range(size)))
 target = 5000
 for container in containers:
-    result, best, avg, worst = contains(container, target)
-    container_name = str(type(container)).split("'")[1].capitalize()
-    tmpl = "{}:\nbest:  {}\nmean:  {}\nworst: {}\n"
-    msg = tmpl.format(container_name, best, avg, worst)
-    print(msg)
+    print_container_type(container)
+    print_stats_report(*contains(container, target))
+
+"""
+Sample output:
+In [12]: %run main.py
+Creation
+
+List
+best:  0.029847362980945036
+mean:  0.04134655749658123
+worst: 0.029847362980945036
+
+Set
+best:  0.08696803500060923
+mean:  0.09387849149934482
+worst: 0.08696803500060923
+
+Tuple
+best:  0.031665550981415436
+mean:  0.04328682199702598
+worst: 0.031665550981415436
+
+Membership
+
+List
+best:  8.290499681606889e-05
+mean:  9.880229481495917e-05
+worst: 8.290499681606889e-05
+
+Set
+best:  3.479945007711649e-07
+mean:  4.6909553930163383e-07
+worst: 3.479945007711649e-07
+
+Tuple
+best:  8.224099292419851e-05
+mean:  0.00010319769789930433
+worst: 8.224099292419851e-05
+"""
