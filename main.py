@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Won't use timeit module as there isn't an easy or elegant way to pass code or
 extract result
@@ -51,6 +52,7 @@ import time
 import statistics
 
 default_timer = time.perf_counter  # process_time
+import pdb; pdb.set_trace()  # XXX BREAKPOINT
 
 def timeit(callable_, runs=10):
     def inner(*args, **kwargs):
