@@ -55,20 +55,23 @@ default_timer = time.perf_counter  # process_time
 
 
 def timeit(callable_, get_results=False, runs=10):
+
     def inner(*args, **kwargs):
-        times = []
-        for i in range(runs):
+
+        def timeit():
             start = default_timer()
-            results = callable_(*args, **kwargs)
+            callable_(*args, **kwargs)
             end = default_timer()
-            took = end - start
-            times.append(took)
+            return end - start
+
+        times = [timeit() for _ in range(runs)]
+
         avg = statistics.mean(times)
         best = min(times)
         worst = min(times)
-        if get_results:
-            return results
+
         return best, avg, worst
+
     return inner
 
 
