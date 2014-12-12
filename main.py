@@ -89,10 +89,9 @@ def print_stats_report(best, avg, worst):
 
 
 def print_container_type(container):
-    if type(container) == type:
-        print(str(container).split("'")[1].capitalize())
-    else:
-        print(str(type(container)).split("'")[1].capitalize())
+    if not type(container) == type:
+        container = type(container)
+    print(str(container).split("'")[1].capitalize())
 
 
 def study(containers, timeit_function, parameter):
