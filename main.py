@@ -54,18 +54,20 @@ import statistics
 default_timer = time.perf_counter  # process_time
 
 
-def timeit(callable_, runs=10):
+def timeit(callable_, get_results=False, runs=10):
     def inner(*args, **kwargs):
         times = []
         for i in range(runs):
             start = default_timer()
-            result = callable_(*args, **kwargs)
+            results = callable_(*args, **kwargs)
             end = default_timer()
             took = end - start
             times.append(took)
         avg = statistics.mean(times)
         best = min(times)
         worst = min(times)
+        if get_results:
+            return results
         return best, avg, worst
     return inner
 
@@ -93,20 +95,22 @@ def print_container_type(container):
         print(str(type(container)).split("'")[1].capitalize())
 
 
-size = int(1e6)
+def study(containers, timeit_function, parameter):
+    for container in containers:
+        print_container_type(container)
+        print_stats_report(*timeit_function(container, parameter))
 
-print('Creation\n')
+
+print('Creation')
 containers = (list, set, tuple)
-for container in containers:
-    print_container_type(container)
-    print_stats_report(*create(container, size))
+size = int(1e6)
+study(containers, create, size)
 
-print('Membership\n')
-containers = (list(range(size)), {x for x in range(size)}, tuple(range(size)))
+print('Membership')
+containers = (list(range(size)), set(range(size)), tuple(range(size)))
 target = 5000
-for container in containers:
-    print_container_type(container)
-    print_stats_report(*contains(container, target))
+study(containers, contains, size)
+
 
 """
 Sample output:
