@@ -50,11 +50,15 @@ Note that teimit module uses perf_counter as its default
 """
 import time
 import statistics
+import json
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 default_timer = time.perf_counter  # process_time
 
 
-def timeit(callable_, get_results=False, runs=10):
+def timeit(callable_, runs=10):
 
     def inner(*args, **kwargs):
 
@@ -81,8 +85,8 @@ def create(container, count):
 
 
 @timeit
-def contains(container, obj):
-    return obj in container
+def contains(container, target):
+    return target in container
 
 
 def print_stats_report(best, avg, worst):
@@ -103,16 +107,92 @@ def study(containers, timeit_function, parameter):
         print_stats_report(*timeit_function(container, parameter))
 
 
-print('Creation')
-containers = (list, set, tuple)
-size = int(1e6)
-study(containers, create, size)
+# print('Creation')
+# containers = (list, set, tuple)
+# size = int(1e6)
+# study(containers, create, size)
+#
+# print('Membership')
+# containers = (list(range(size)), set(range(size)), tuple(range(size)))
+# target = 5000
+# study(containers, contains, size)
 
-print('Membership')
-containers = (list(range(size)), set(range(size)), tuple(range(size)))
-target = 5000
-study(containers, contains, size)
+def cache(callable_, cache_filename):
+    def inner(*args, **kwargs):
+        try:
+            with open(cache_filename, 'r') as fp:
+                results = json.loads(fp.read())
 
+        except FileNotFoundError:
+
+            results = callable_(*args, **kwargs)
+
+            # TODO print some feedback
+            with open(cache_filename, 'w') as fp:
+                result_str = json.dumps(results)
+                fp.write(result_str)
+
+        return results
+    return inner
+
+
+@cache('list_creation')
+def get_results_creation(container, start=0, end=int(1e6), step=int(1e4)):
+
+    for i in range(start, end, step):
+        create(container, i)
+
+
+def get_results_contains(container, cache_filename,
+                         start=0, end=int(1e6), step=int(1e4)):
+    # file based caching
+    try:
+        with open(cache_filename, 'r') as fp:
+            results = json.loads(fp.read())
+
+    except FileNotFoundError:
+
+        target = -1 # we want test to always fail. that way we ensure all
+        # values are examined
+        results = []
+        for i in range(start, end, step):
+            values = container(range(i))
+            results.append(contains(values, target))
+
+
+        # TODO print some feedback
+        with open(cache_filename, 'w') as fp:
+            result_str = json.dumps(results)
+            fp.write(result_str)
+
+    return results
+
+
+def save_graph(results, file_name):
+    x = np.arange(0, len(results), 1)
+    y = list(map(lambda x: x[1], results))
+
+    fig = plt.figure()
+    fig.add_subplot(111)
+    plt.plot(x, y)
+    plt.savefig(file_name)
+
+
+from functools import partial
+
+list_create = partial(create, list)
+results = get_results_creation(list_create , 'list_creation.txt')
+save_graph(results, 'list_creation.png')
+
+set_create = partial(create, set)
+results = get_results_creation(set_create , 'set_creation.txt')
+save_graph(results, 'set_creation.png')
+
+results = get_results_contains(list, 'list_membership.txt')
+save_graph(results, 'list_membership.png')
+
+results = get_results_contains(set, 'set_membership.txt')
+save_graph(results, 'set_membership.png')
 
 """
 Sample output:
