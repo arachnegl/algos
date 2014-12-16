@@ -117,8 +117,9 @@ def study(containers, timeit_function, parameter):
 # target = 5000
 # study(containers, contains, size)
 
-def cache(callable_, cache_filename):
+def cache(callable_):
     def inner(*args, **kwargs):
+        cache_filename = kwargs.pop('cache_filename')
         try:
             with open(cache_filename, 'r') as fp:
                 results = json.loads(fp.read())
@@ -136,7 +137,7 @@ def cache(callable_, cache_filename):
     return inner
 
 
-@cache('list_creation')
+@cache
 def get_results_creation(container, start=0, end=int(1e6), step=int(1e4)):
 
     for i in range(start, end, step):
@@ -181,10 +182,14 @@ def save_graph(results, file_name):
 from functools import partial
 
 list_create = partial(create, list)
-results = get_results_creation(list_create , 'list_creation.txt')
+results = get_results_creation(list_create, cache_filename='list_creation.txt')
 save_graph(results, 'list_creation.png')
 
 set_create = partial(create, set)
+results = get_results_creation(set_create , 'set_creation.txt')
+save_graph(results, 'set_creation.png')
+
+set_create = partial(create, tuple)
 results = get_results_creation(set_create , 'set_creation.txt')
 save_graph(results, 'set_creation.png')
 
