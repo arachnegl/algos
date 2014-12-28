@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 """
-To run with tests:
+To run tests:
     python3 -m unittest trees.py
 
 """
-
 import unittest
 
 
 class BinaryTree:
 
-    def __init__(self, value):
+    def __init__(self, value=None):
         self.value = value
         self.left = None
         self.right = None
@@ -32,6 +31,49 @@ class BinaryTree:
             tree = BinaryTree(value)
             tree.right = self.right
             self.right = tree
+
+
+def create_parse_tree(expression):
+
+    # initialise stack
+    stack = list()
+    stack.append(BinaryTree())
+
+    for token in expression:
+        if token == ' ':
+            continue
+        elif token == '(':
+            current = stack.pop()
+            current.left = BinaryTree()
+            stack.append(current)       # return to stack
+            stack.append(current.left)  # make new current
+            continue
+        elif token == ')':
+            if len(stack) == 1:
+                # preserve at least one
+                pass
+            else:
+                # goto parent
+                stack.pop()
+            continue
+        elif token in '+':
+            current = stack.pop()
+            current.value = token
+            current.right = BinaryTree()
+            stack.append(current)
+            stack.append(current.right)
+            continue
+        elif token.isdigit():
+            current = stack.pop()
+            current.value = token
+            # stack is now at parent
+            continue
+
+        assert False, 'Unrecoginsed token'
+
+    tree = stack.pop()  # should be @ root of tree
+
+    return tree
 
 
 class TestBinaryTree(unittest.TestCase):
@@ -117,3 +159,51 @@ class TestBinaryTree(unittest.TestCase):
         assert tree.left.right.value == 'd'
         assert tree.right.left.value == 'e'
         assert tree.right.right.value == 'f'
+
+
+class TestParseTree(unittest.TestCase):
+
+     def test_4_plus_3(self):
+
+        expr = "(4 + 3)"
+
+        tree = create_parse_tree(expr)
+
+        assert tree.value == "+"
+        assert tree.left.value == "4"
+        assert tree.right.value == "3"
+
+     def test_5_plus_9(self):
+
+        expr = "(5 + 9)"
+
+        tree = create_parse_tree(expr)
+
+        assert tree.value == "+"
+        assert tree.left.value == "5"
+        assert tree.right.value == "9"
+     def test_nested_parenthesis(self):
+
+        expr = "((5 + 9) + (1 + 3))"
+
+        tree = create_parse_tree(expr)
+
+        assert tree.value == "+"
+        assert tree.left.value == "+"
+        assert tree.left.left.value == "5"
+        assert tree.left.right.value == "9"
+        assert tree.right.value == "+"
+        assert tree.right.left.value == "1"
+        assert tree.right.right.value == "3"
+
+     def test_nested_parenthesis_unsymetric(self):
+
+        expr = "(5 + (1 + 3))"
+
+        tree = create_parse_tree(expr)
+
+        assert tree.value == "+"
+        assert tree.left.value == "5"
+        assert tree.right.value == "+"
+        assert tree.right.left.value == "1"
+        assert tree.right.right.value == "3"
