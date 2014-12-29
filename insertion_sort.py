@@ -8,7 +8,7 @@ to run tests execute:
 import unittest
 
 
-def sort(a, debug=False):
+def sort(sequence, debug=False):
     """ Sorts sequence using insertion sort algorithm
 
     I: sequence of numbers <a1, ... , an>
@@ -31,18 +31,19 @@ def sort(a, debug=False):
     # j is index of current element
     # insert A[j] into sorted sequence A[1..j-1]
 
-    for j, el in enumerate(a):
-        if j == 0:
-            continue
-        key = a[j]
+    for j, el in enumerate(sequence):
+        if j == 0: continue
+        if debug: print(str(sequence))
+        key = sequence[j]
         i = j - 1
-        while i >= 0 and a[i] > key:
-            a[i + 1] = a[i]
+        # Descend ordered sequence and whilst
+        # cursor element is superior to key
+        # shift element at index i to i + 1
+        while i >= 0 and sequence[i] > key:
+            sequence[i + 1] = sequence[i]
             i = i - 1
-        a[i + 1] = key
-        if debug:
-            print(str(a))
-    return a
+        sequence[i + 1] = key  # insert key
+    return sequence
 
 
 class TestInsertionSort(unittest.TestCase):
@@ -98,5 +99,14 @@ class TestInsertionSort(unittest.TestCase):
 
         output = sort(input_)
         expected = [1, 2, 3, 4]
+
+        self.assertSequenceEqual(output, expected)
+
+    def test_can_sort_unordered_list(self):
+
+        input_ = [11, 4, 2, 1, 3, 9]
+
+        output = sort(input_)
+        expected = [1, 2, 3, 4, 9, 11]
 
         self.assertSequenceEqual(output, expected)
