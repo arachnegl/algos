@@ -163,8 +163,7 @@ class TestBinaryTree(unittest.TestCase):
 
 class TestParseTree(unittest.TestCase):
 
-     def test_4_plus_3(self):
-
+    def test_4_plus_3(self):
         expr = "(4 + 3)"
 
         tree = create_parse_tree(expr)
@@ -173,7 +172,7 @@ class TestParseTree(unittest.TestCase):
         assert tree.left.value == 4
         assert tree.right.value == 3
 
-     def test_5_plus_9(self):
+    def test_5_plus_9(self):
 
         expr = "(5 + 9)"
 
@@ -182,7 +181,8 @@ class TestParseTree(unittest.TestCase):
         assert tree.value == "+"
         assert tree.left.value == 5
         assert tree.right.value == 9
-     def test_nested_parenthesis(self):
+
+    def test_nested_parenthesis(self):
 
         expr = "((5 + 9) + (1 + 3))"
 
@@ -196,7 +196,7 @@ class TestParseTree(unittest.TestCase):
         assert tree.right.left.value == 1
         assert tree.right.right.value == 3
 
-     def test_nested_parenthesis_unsymetric(self):
+    def test_nested_parenthesis_unsymetric(self):
 
         expr = "(5 + (1 + 3))"
 
