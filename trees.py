@@ -56,7 +56,7 @@ def create_parse_tree(expression):
                 # goto parent
                 stack.pop()
             continue
-        elif token in '+':
+        elif token in '+-*/':
             current = stack.pop()
             current.value = token
             current.right = BinaryTree()
