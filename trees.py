@@ -5,6 +5,7 @@ To run tests:
 
 """
 import unittest
+import operator
 
 
 class BinaryTree:
@@ -74,6 +75,26 @@ def create_parse_tree(expression):
     tree = stack.pop()  # should be @ root of tree
 
     return tree
+
+
+def evaluate(tree):
+
+    operations = {
+        '+': operator.add,
+        '-': operator.sub,
+        '*': operator.mul,
+        '/': operator.truediv,
+    }
+
+    if tree.left and tree.right:
+        op = operations[tree.value]
+        result = op(
+            evaluate(tree.left),
+            evaluate(tree.right)
+        )
+        return result
+    else:
+        return tree.value
 
 
 class TestBinaryTree(unittest.TestCase):
@@ -207,3 +228,46 @@ class TestParseTree(unittest.TestCase):
         assert tree.right.value == "+"
         assert tree.right.left.value == 1
         assert tree.right.right.value == 3
+
+
+class TestEvaluateParseTree(unittest.TestCase):
+
+    def test_4_plus_3(self):
+
+        expr = "(4 + 3)"
+        tree = create_parse_tree(expr)
+
+        got = evaluate(tree)
+        expected = 7
+
+        self.assertEqual(got, expected)
+
+    def test_5_plus_9(self):
+
+        expr = "(5 + 9)"
+        tree = create_parse_tree(expr)
+
+        got = evaluate(tree)
+        expected = 14
+
+        self.assertEqual(got, expected)
+
+    def test_nested_parenthesis(self):
+
+        expr = "((5 + 9) + (1 + 3))"
+        tree = create_parse_tree(expr)
+
+        got = evaluate(tree)
+        expected = 18
+
+        self.assertEqual(got, expected)
+
+    def test_nested_parenthesis_unsymetric(self):
+
+        expr = "(5 + (1 + 3))"
+        tree = create_parse_tree(expr)
+
+        got = evaluate(tree)
+        expected = 9
+
+        self.assertEqual(got, expected)
