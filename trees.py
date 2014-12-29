@@ -65,7 +65,7 @@ def create_parse_tree(expression):
             continue
         elif token.isdigit():
             current = stack.pop()
-            current.value = token
+            current.value = int(token)
             # stack is now at parent
             continue
 
@@ -170,8 +170,8 @@ class TestParseTree(unittest.TestCase):
         tree = create_parse_tree(expr)
 
         assert tree.value == "+"
-        assert tree.left.value == "4"
-        assert tree.right.value == "3"
+        assert tree.left.value == 4
+        assert tree.right.value == 3
 
      def test_5_plus_9(self):
 
@@ -180,8 +180,8 @@ class TestParseTree(unittest.TestCase):
         tree = create_parse_tree(expr)
 
         assert tree.value == "+"
-        assert tree.left.value == "5"
-        assert tree.right.value == "9"
+        assert tree.left.value == 5
+        assert tree.right.value == 9
      def test_nested_parenthesis(self):
 
         expr = "((5 + 9) + (1 + 3))"
@@ -190,11 +190,11 @@ class TestParseTree(unittest.TestCase):
 
         assert tree.value == "+"
         assert tree.left.value == "+"
-        assert tree.left.left.value == "5"
-        assert tree.left.right.value == "9"
+        assert tree.left.left.value == 5
+        assert tree.left.right.value == 9
         assert tree.right.value == "+"
-        assert tree.right.left.value == "1"
-        assert tree.right.right.value == "3"
+        assert tree.right.left.value == 1
+        assert tree.right.right.value == 3
 
      def test_nested_parenthesis_unsymetric(self):
 
@@ -203,7 +203,7 @@ class TestParseTree(unittest.TestCase):
         tree = create_parse_tree(expr)
 
         assert tree.value == "+"
-        assert tree.left.value == "5"
+        assert tree.left.value == 5
         assert tree.right.value == "+"
-        assert tree.right.left.value == "1"
-        assert tree.right.right.value == "3"
+        assert tree.right.left.value == 1
+        assert tree.right.right.value == 3
