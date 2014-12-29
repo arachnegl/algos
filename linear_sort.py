@@ -3,12 +3,12 @@ Implementation of Insertion Sort as found in 'Introduction to Algorithms'
 chapter 2
 
 to run tests execute:
-    python3 -m unittest insertion_sort
+    python3 -m unittest linear_sort
 """
 import unittest
 
 
-def sort(sequence, debug=False):
+def insertion_sort(sequence, debug=False):
     """ Sorts sequence using insertion sort algorithm
 
     I: sequence of numbers <a1, ... , an>
@@ -46,13 +46,29 @@ def sort(sequence, debug=False):
     return sequence
 
 
+def selection_sort(sequence, debug=False):
+
+    for i, el in enumerate(sequence):
+        minimum = i
+        for j, el in enumerate(sequence[i:]):
+            if el < sequence[minimum]:
+                minimum = i + j  # new minimum
+        # swap values:
+        sequence[i], sequence[minimum] = sequence[minimum], sequence[i]
+
+    return sequence
+
+
 class TestInsertionSort(unittest.TestCase):
+
+    # TODO generalise these tests to all sorting algorithms
+    # sorts = [insertion_sort, selection_sort]
 
     def test_can_sort_empty_list(self):
 
         input_ = []
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = []
 
         self.assertSequenceEqual(output, expected)
@@ -61,7 +77,7 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = [1]
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = [1]
 
         self.assertSequenceEqual(output, expected)
@@ -70,7 +86,7 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = [1, 2]
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = [1, 2]
 
         self.assertSequenceEqual(output, expected)
@@ -79,7 +95,7 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = [2, 1]
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = [1, 2]
 
         self.assertSequenceEqual(output, expected)
@@ -88,7 +104,7 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = [4, 2, 1]
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = [1, 2, 4]
 
         self.assertSequenceEqual(output, expected)
@@ -97,7 +113,7 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = [4, 2, 1, 3]
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = [1, 2, 3, 4]
 
         self.assertSequenceEqual(output, expected)
@@ -106,7 +122,37 @@ class TestInsertionSort(unittest.TestCase):
 
         input_ = [11, 4, 2, 1, 3, 9]
 
-        output = sort(input_)
+        output = insertion_sort(input_)
         expected = [1, 2, 3, 4, 9, 11]
 
         self.assertSequenceEqual(output, expected)
+
+
+class TestSelectionSort(unittest.TestCase):
+
+    def test_sequence_three_ints(self):
+
+        seq = [1, 3, 2]
+
+        got = selection_sort(seq)
+        expected = [1, 2, 3]
+
+        self.assertSequenceEqual(got, expected)
+
+    def test_sequence_four_ints(self):
+
+        seq = [1, 5, 3, 2]
+
+        got = selection_sort(seq)
+        expected = [1, 2, 3, 5]
+
+        self.assertSequenceEqual(got, expected)
+
+    def test_sequence_five_ints(self):
+
+        seq = [6, 5, 3, 2, -4]
+
+        got = selection_sort(seq)
+        expected = [-4, 2, 3, 5, 6]
+
+        self.assertSequenceEqual(got, expected)
