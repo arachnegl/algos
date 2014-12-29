@@ -49,6 +49,7 @@ def insertion_sort(sequence, debug=False):
 def selection_sort(sequence, debug=False):
 
     for i, el in enumerate(sequence):
+        if debug: print(str(sequence))
         minimum = i
         for j, el in enumerate(sequence[i:]):
             if el < sequence[minimum]:
@@ -57,6 +58,48 @@ def selection_sort(sequence, debug=False):
         sequence[i], sequence[minimum] = sequence[minimum], sequence[i]
 
     return sequence
+
+
+def merge(first, second):
+    """
+    takes two sorted lists and returns
+    them merged into new sorted list
+    """
+    merged = list()
+
+    i = 0
+    y = 0
+    while len(first[i:]) and len(second[y:]):
+        first_head = first[i]
+        second_head = second[y]
+        if first_head <= second_head:
+            to_add = first_head
+            i += 1
+        else:
+            to_add = second_head
+            y += 1
+        merged.append(to_add)
+
+    if len(first[i:]):
+        merged.extend(first[i:])
+    elif len(second[y:]):
+        merged.extend(second[y:])
+    return merged
+
+
+def merge_sort(sequence):
+
+    to_merge = [[item] for item in sequence]
+
+    while len(to_merge) > 1:
+        first = to_merge[0]
+        second = to_merge[1]
+        merged = merge(first, second)
+        to_merge = to_merge[2:]
+        to_merge.append(merged)
+
+    result = to_merge[0]
+    return result
 
 
 class TestInsertionSort(unittest.TestCase):
@@ -154,5 +197,47 @@ class TestSelectionSort(unittest.TestCase):
 
         got = selection_sort(seq)
         expected = [-4, 2, 3, 5, 6]
+
+        self.assertSequenceEqual(got, expected)
+
+
+class TestMergeSort(unittest.TestCase):
+
+    def test_merge_three_items_each(self):
+
+        seq_a = [2, 4, 6]
+        seq_b = [1, 3, 5]
+
+        got = merge(seq_a, seq_b)
+        expected = [1, 2, 3, 4, 5, 6]
+
+        self.assertSequenceEqual(got, expected)
+
+    def test_merge_one_items_each(self):
+
+        seq_a = [2]
+        seq_b = [1]
+
+        got = merge(seq_a, seq_b)
+        expected = [1, 2]
+
+        self.assertSequenceEqual(got, expected)
+
+    def test_merge_one_items_each_values_swapped(self):
+
+        seq_a = [1]
+        seq_b = [2]
+
+        got = merge(seq_a, seq_b)
+        expected = [1, 2]
+
+        self.assertSequenceEqual(got, expected)
+
+    def test_merge_sort(self):
+
+        seq = [2, 4, 6, 1, 3, 5]
+
+        got = merge_sort(seq)
+        expected = [1, 2, 3, 4, 5, 6]
 
         self.assertSequenceEqual(got, expected)
