@@ -36,7 +36,7 @@ class BinaryTree:
 
 def create_parse_tree(expression):
 
-    # initialise stack
+    # stack acts as a cursor in the construction of the tree
     stack = list()
     stack.append(BinaryTree())
 
@@ -72,9 +72,10 @@ def create_parse_tree(expression):
 
         assert False, 'Unrecoginsed token'
 
-    tree = stack.pop()  # should be @ root of tree
+    root = stack.pop()
+    assert not stack, 'cursor should be @ root of tree'
 
-    return tree
+    return root
 
 
 def evaluate(tree):
