@@ -28,7 +28,7 @@ class Stack:
         return len(self.items)
 
 
-def is_balanced(string, openclose='()'):
+def is_balanced(string, opening='({[', closing=']})'):
     """
     test if a string contains a balanced number of
     opening and closing symbols
@@ -36,13 +36,10 @@ def is_balanced(string, openclose='()'):
 
     stack = list()
 
-    opening = openclose[0]
-    closing = openclose[1]
-
     for char in string:
-        if char == opening:
+        if char in opening:
             stack.append(opening)
-        elif char == closing:
+        elif char in closing:
             if not stack:
                 # should not be empty at this point
                 return False
@@ -72,7 +69,10 @@ class BalancedParenthesisTest(unittest.TestCase):
     def test_basic_balanced(self):
 
         strings = [
-            '()', '(())', '((()()))',
+            '()', '[]', '{}',
+            '(())', '[[]]', '{{}}',
+            '((()()))', '[[[][]]]', '{{{}{}}}',
+            '{{ ( ) [] () }}', '( [] {} () )',
             'awef ( ) awef', '(awef) (awef)', '((awef) (awef)) ( awef)',
         ]
 
@@ -82,6 +82,8 @@ class BalancedParenthesisTest(unittest.TestCase):
 
         strings = [
             '((', '()))', '(((())',
+            '[[[', '[[][]', '{{}', '}}}}}',
+            '{{ () [] }',
         ]
 
         self._assert(False, strings)
