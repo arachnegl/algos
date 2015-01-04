@@ -33,6 +33,7 @@ def insert(index, tree, right_tree):
     else:
         right_tree[index] = tree[index]
         tree[index] = right_tree
+    return tree
 
 insert_left = partial(insert, 1)
 insert_right = partial(insert, 2)
