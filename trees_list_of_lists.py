@@ -27,12 +27,12 @@ def get_right(tree):
     return tree[2]
 
 
-def insert(index, tree, new_tree):
+def insert(index, tree, right_tree):
     if not tree[index]:
-        tree[index] = new_tree
+        tree[index] = right_tree
     else:
-        insert(index, new_tree, tree[index])
-        tree[index] = new_tree
+        right_tree[index] = tree[index]
+        tree[index] = right_tree
 
 insert_left = partial(insert, 1)
 insert_right = partial(insert, 2)
@@ -128,8 +128,6 @@ class TestListOfListTrees(unittest.TestCase):
         self.assertEqual(get_value(first_level_right), 6)
         self.assertEqual(get_value(second_level_right), 5)
         self.assertEqual(get_value(third_level_right), 4)
-
-
 
 
 if __name__ == '__main__':
