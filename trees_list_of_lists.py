@@ -31,16 +31,32 @@ def get_right(tree):
     return tree[2]
 
 
-def insert(index, tree, right_tree):
+def insert(index, tree, new_tree):
     if not tree[index]:
-        tree[index] = right_tree
+        tree[index] = new_tree
     else:
-        right_tree[index] = tree[index]
-        tree[index] = right_tree
-    return tree
+        new_tree[index] = tree[index]
+        tree[index] = new_tree
+    return new_tree
 
 insert_left = partial(insert, 1)
 insert_right = partial(insert, 2)
+
+
+def traverse(tree):
+    """
+    Preorder
+    """
+
+    left = get_left(tree)
+    right = get_right(tree)
+
+    if left:
+        left = traverse(left)
+    if right:
+        right = traverse(right)
+
+    return [get_value(tree), left, right]
 
 
 class TestListOfListTrees(unittest.TestCase):
@@ -133,6 +149,45 @@ class TestListOfListTrees(unittest.TestCase):
         self.assertEqual(get_value(first_level_right), 6)
         self.assertEqual(get_value(second_level_right), 5)
         self.assertEqual(get_value(third_level_right), 4)
+
+
+class TestTraversingListOfListTree(unittest.TestCase):
+
+    # root represents this tree:
+    #       'a'
+    #      /   \
+    #    'b'    'c'
+    #      \    /  \
+    #      'd''e'   'f'
+
+    root = binary_tree('a')
+    b = insert_left(root, binary_tree('b'))
+    c = insert_right(root, binary_tree('c'))
+    insert_right(b, binary_tree('d'))
+    insert_left(c, binary_tree('e'))
+    insert_right(c, binary_tree('f'))
+
+    def test_fixture(self):
+
+        tree = self.root
+
+        self.assertEqual(get_value(tree), 'a')
+
+    def test_traverse(self):
+
+        tree = self.root
+        got = traverse(tree)
+
+        expected = ['a',
+                    ['b',
+                     [],
+                     ['d', [], []]],
+                    ['c',
+                     ['e', [], []],
+                     ['f', [], []]]
+                    ]
+
+        self.assertEqual(got, expected)
 
 
 if __name__ == '__main__':
