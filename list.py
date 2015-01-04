@@ -102,7 +102,19 @@ class LinkedList:
 
 
 class OrderedLinkedList(LinkedList):
-    pass
+
+    def append(self, value):
+        # meaningless in this context
+        raise(NotImplemented)
+
+    def insert():
+        # TODO insert value at correct location
+        # to maintain ordering
+        pass
+
+    def search(self, value):
+        # TODO implent binary or quick search
+        pass
 
 
 class TestLinkedList(unittest.TestCase):
