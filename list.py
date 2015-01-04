@@ -98,6 +98,10 @@ class LinkedList:
         return not bool(self.head)
 
 
+class OrderedLinkedList(LinkedList):
+    pass
+
+
 class TestLinkedList(unittest.TestCase):
 
     def test_creation_returns_empty_list(self):
@@ -266,6 +270,10 @@ class TestLinkedList(unittest.TestCase):
         self.assertEqual(list_.head.value, 43)
         self.assertEqual(list_.head.next.value, 65)
         self.assertIsNone(list_.head.next.next)
+
+
+class TestOrderedLinkedList(unittest.TestCase):
+    pass
 
 if __name__ == '__main__':
     unittest.main()
