@@ -19,6 +19,10 @@ def get_value(tree):
     return tree[0]
 
 
+def set_value(tree, value):
+    tree[0] = value
+
+
 def get_left(tree):
     return tree[1]
 
