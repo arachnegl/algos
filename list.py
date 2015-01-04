@@ -1,5 +1,8 @@
 """
 Linked List implementation
+
+run tests:
+    python3 list.py
 """
 import unittest
 
