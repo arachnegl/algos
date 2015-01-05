@@ -131,6 +131,7 @@ class TestAnagram(unittest.TestCase):
         ('abcd', 'abc', False),     # strings of unequal length
         ('heart', 'earth', True),
         ('python', 'typhon', True),
+        ('apple', 'pleap', True),
     ]
 
     @classmethod
