@@ -16,7 +16,7 @@ class BinaryHeap:
         self.size = 0
 
     def percolate_up(self, i):
-        max_depth = 5000  # infinite loop guard
+        max_depth = 1000  # infinite loop guard
         while i // 2 > 0 and max_depth > 0:
             max_depth -= 1
             if self.list[i] < self.list[i // 2]:
@@ -29,6 +29,13 @@ class BinaryHeap:
         self.list.append(k)
         self.size += 1
         self.percolate_up(self.size)
+
+    def delete_min(self):
+        min_ = self.list[1]
+        self.list[1] = self.pop()
+        self.size -= 1
+        self.percolate_down(self.size)
+        return min_
 
 
 class TestHeap(unittest.TestCase):
