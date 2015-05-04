@@ -52,6 +52,35 @@ def count_values(a_dict):
     return len(values)
 
 
+def add_sparse_vectors(vec_1, vec_2):
+
+    # creating a new vec means this function is side-effect free
+    result = {}
+
+    for key, val in vec_1.items():
+        if key in vec_2:
+            result[key] = val + vec_2.pop(key)
+        else:
+            result[key] = val
+
+    for key, val in vec_2.items():
+        result[key] = val
+
+    return result
+
+
+def sparse_vector_product(vec_1, vec_2):
+
+    temp = {}
+
+    for key, val in vec_1.items():
+        if key in vec_2:
+            # if key not in vec_2 it is 0
+            temp[key] = val * vec_2.pop(key)
+
+    return sum(temp.values())
+
+
 class TestFindDups(unittest.TestCase):
 
     def test_empty(self):
@@ -175,3 +204,78 @@ class TestCountValues(unittest.TestCase):
 
         got = count_values({'a': 1, 'b': 1, 'c': 'awef', 'd': 'awef'})
         assert got == 2
+
+
+class TestSparseVector(unittest.TestCase):
+
+    def test_add_empty_left_operand(self):
+
+        vec_1 = {}
+        vec_2 = {0: 4, 1: 5, 2: 6}
+
+        got = add_sparse_vectors(vec_1, vec_2)
+
+        assert got == vec_2
+
+    def test_add_empty_right_operand(self):
+
+        vec_1 = {0: 1, 1: 2, 2: 3}
+        vec_2 = {}
+
+        got = add_sparse_vectors(vec_1, vec_2)
+
+        assert got == vec_1
+
+    def test_add_operands_with_same_keys(self):
+
+        vec_1 = {0: 1, 1: 2, 2: 3}
+        vec_2 = {0: 4, 1: 5, 2: 6}
+
+        got = add_sparse_vectors(vec_1, vec_2)
+
+        assert got == {0: 5, 1: 7, 2: 9}
+
+    def test_add_operands_with_some_different_keys(self):
+
+        vec_1 = {0: 1, 1: 2, 2: 3}
+        vec_2 = {5: 4, 1: 5, 8: 6}
+
+        got = add_sparse_vectors(vec_1, vec_2)
+
+        assert got == {0: 1, 1: 7, 2: 3, 5: 4, 8: 6}
+
+    def test_product_empty_left_operand(self):
+
+        vec_1 = {}
+        vec_2 = {0: 4, 1: 5, 2: 6}
+
+        got = sparse_vector_product(vec_1, vec_2)
+
+        assert got == 0
+
+    def test_product_empty_right_operand(self):
+
+        vec_1 = {0: 1, 1: 2, 2: 3}
+        vec_2 = {}
+
+        got = sparse_vector_product(vec_1, vec_2)
+
+        assert got == 0
+
+    def test_product_operands_with_same_keys(self):
+
+        vec_1 = {0: 1, 1: 2, 2: 3}
+        vec_2 = {0: 4, 1: 5, 2: 6}
+
+        got = sparse_vector_product(vec_1, vec_2)
+
+        assert got == 32
+
+    def test_product_operands_with_some_different_keys(self):
+
+        vec_1 = {0: 1, 1: 2, 2: 3}
+        vec_2 = {5: 4, 1: 5, 8: 6}
+
+        got = sparse_vector_product(vec_1, vec_2)
+
+        assert got == 10
