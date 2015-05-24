@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 To run tests:
-    python3 -m unittest trees.py
+    python3 -m unittest trees_nodes_refs.py
 
 """
 import unittest
@@ -42,13 +42,12 @@ def create_parse_tree(expression):
 
     for token in expression:
         if token == ' ':
-            continue
+            pass
         elif token == '(':
             current = stack.pop()
             current.left = BinaryTree()
             stack.append(current)       # return to stack
             stack.append(current.left)  # make new current
-            continue
         elif token == ')':
             if len(stack) == 1:
                 # preserve at least one
@@ -56,21 +55,18 @@ def create_parse_tree(expression):
             else:
                 # goto parent
                 stack.pop()
-            continue
         elif token in '+-*/':
             current = stack.pop()
             current.value = token
             current.right = BinaryTree()
             stack.append(current)
             stack.append(current.right)
-            continue
         elif token.isdigit():
             current = stack.pop()
             current.value = int(token)
             # stack is now at parent
-            continue
-
-        assert False, 'Unrecoginsed token'
+        else:
+            assert False, 'Unrecoginsed token'
 
     root = stack.pop()
     assert not stack, 'cursor should be @ root of tree'
